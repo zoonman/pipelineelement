@@ -1,0 +1,20 @@
+# Ignore everything
+**
+
+# Allow files and directories
+
+!/CMakeLists.txt
+!/src/**
+!/lib/**
+
+# Ignore unnecessary files inside allowed directories
+
+**/*~
+**/*.log
+**/.DS_Store
+**/Thumbs.db
+**/CMakeCache.txt
+**/CMakeFiles
+
+lib/SimpleAmqpClient/simpleamqpclient-build
+lib/spdlog/build

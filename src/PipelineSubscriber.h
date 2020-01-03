@@ -1,5 +1,5 @@
-#ifndef PIPELINEELEMENT_SIMPLESUBSCRIBER_H
-#define PIPELINEELEMENT_SIMPLESUBSCRIBER_H
+#ifndef PIPELINEELEMENT_PIPELINESUBSCRIBER_H
+#define PIPELINEELEMENT_PIPELINESUBSCRIBER_H
 
 #include "SimpleAmqpClient/BasicMessage.h"
 #include "SimpleAmqpClient/Channel.h"
@@ -13,18 +13,26 @@
 
 namespace AmqpClient {
 
-    class SimpleSubscriber {
+    class PipelineSubscriber {
     public:
-        typedef boost::shared_ptr<SimpleSubscriber> ptr_t;
+        typedef boost::shared_ptr<PipelineSubscriber> ptr_t;
 
-        static ptr_t Create(Channel::ptr_t channel, const std::string &exchange_name, const std::string &queue_name)
+        static ptr_t Create(Channel::ptr_t channel,
+                const std::string &iExchangeName,
+                            const std::string &iQueue,
+                            const std::string &oExchangeName,
+                            const std::string &oQueue)
         {
-            return boost::make_shared<SimpleSubscriber>(channel, exchange_name, queue_name);
+            return boost::make_shared<PipelineSubscriber>(channel, iExchangeName, iQueue, oExchangeName, oQueue);
         }
 
-        explicit SimpleSubscriber(Channel::ptr_t channel, const std::string &exchange_name, const std::string &queue_name);
+        explicit PipelineSubscriber(Channel::ptr_t channel,
+                const std::string &iExchangeName,
+                const std::string &iQueue,
+                const std::string &oExchangeName,
+                const std::string &oQueue);
 
-        virtual ~SimpleSubscriber();
+        virtual ~PipelineSubscriber();
 
         std::string WaitForMessageString(int timeout = -1);
         BasicMessage::ptr_t WaitForMessage(int timeout = -1);
@@ -33,9 +41,12 @@ namespace AmqpClient {
 
     private:
         Channel::ptr_t m_channel;
-        std::string m_consumerQueue;
+        std::string m_iExchangeName;
+        std::string m_oExchangeName;
+        std::string m_iQueue;
+        std::string m_oQueue;
     };
 }
 
 
-#endif //PIPELINEELEMENT_SIMPLESUBSCRIBER_H
+#endif //PIPELINEELEMENT_PIPELINESUBSCRIBER_H

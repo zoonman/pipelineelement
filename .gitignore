@@ -1,0 +1,5 @@
+cmake-build-debug
+.env.local
+-lib
+CMakeCache.txt
+CMakeFiles

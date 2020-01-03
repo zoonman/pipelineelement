@@ -2,7 +2,7 @@
 // Created by Philipp Tkachev on 2020-01-02.
 //
 
-#include "./SimpleSubscriber.h"
+#include "PipelineSubscriber.h"
 
 #include <boost/lexical_cast.hpp>
 #include <utility>
@@ -12,40 +12,47 @@
 
 namespace AmqpClient {
 
-    SimpleSubscriber::SimpleSubscriber(Channel::ptr_t channel, const std::string &exchange_name, const std::string &queue_name) : m_channel(std::move(channel))
+    PipelineSubscriber::PipelineSubscriber(Channel::ptr_t channel,
+            const std::string &iExchangeName,
+            const std::string &iQueue,
+            const std::string &oExchangeName,
+            const std::string &oQueue
+            ) : m_channel(std::move(channel))
     {
-        m_consumerQueue = queue_name;
+        m_iExchangeName = iExchangeName;
+        m_iQueue = iQueue;
+        m_oExchangeName = oExchangeName;
+        m_oQueue = oQueue;
 
-        m_channel->DeclareExchange(exchange_name, Channel::EXCHANGE_TYPE_FANOUT);
-        m_channel->DeclareQueue(m_consumerQueue);
-        m_channel->BindQueue(m_consumerQueue, exchange_name, "");
+        m_channel->DeclareExchange(m_iExchangeName, Channel::EXCHANGE_TYPE_FANOUT);
+        m_channel->DeclareQueue(m_iQueue, false, true);
+        m_channel->BindQueue(m_iQueue, m_iExchangeName, "");
 
-        m_channel->DeclareExchange("out", Channel::EXCHANGE_TYPE_FANOUT);
-        m_channel->DeclareQueue("outQueue");
-        m_channel->BindQueue("outQueue", "out", "");
+        m_channel->DeclareExchange(m_oExchangeName, Channel::EXCHANGE_TYPE_FANOUT);
+        m_channel->DeclareQueue(m_oQueue, false, true);
+        m_channel->BindQueue(m_oQueue, m_oExchangeName, "");
 
-        m_channel->BasicConsume(m_consumerQueue, m_consumerQueue);
+        m_channel->BasicConsume(m_iQueue, m_iQueue);
     }
 
-    SimpleSubscriber::~SimpleSubscriber()
+    PipelineSubscriber::~PipelineSubscriber()
     {
     }
 
-    std::string SimpleSubscriber::WaitForMessageString(int timeout)
+    std::string PipelineSubscriber::WaitForMessageString(int timeout)
     {
         BasicMessage::ptr_t incoming = WaitForMessage(timeout);
         return incoming->Body();
     }
 
-    void SimpleSubscriber::Publish(const BasicMessage::ptr_t message) {
-
-        m_channel->BasicPublish("out", "", message);
+    void PipelineSubscriber::Publish(const BasicMessage::ptr_t message) {
+        m_channel->BasicPublish(m_oExchangeName, "", message);
     }
 
-    BasicMessage::ptr_t SimpleSubscriber::WaitForMessage(int timeout)
+    BasicMessage::ptr_t PipelineSubscriber::WaitForMessage(int timeout)
     {
         Envelope::ptr_t envelope;
-        m_channel->BasicConsumeMessage(m_consumerQueue, envelope, timeout);
+        m_channel->BasicConsumeMessage(m_iQueue, envelope, timeout);
         return envelope->Message();
     }
 }
