@@ -1,0 +1,6 @@
+[submodule "lib/SimpleAmqpClient"]
+	path = lib/SimpleAmqpClient
+	url = https://github.com/alanxz/SimpleAmqpClient
+[submodule "lib/spdlog"]
+	path = lib/spdlog
+	url = https://github.com/gabime/spdlog
