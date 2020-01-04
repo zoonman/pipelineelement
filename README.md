@@ -63,3 +63,15 @@ Use [semantic versioning](https://semver.org/) for your project.
 ```shell script
 cmake -LAH
 ```
+
+## Design Notes
+
+Because pipeline usually contains number of components
+written in different languages interopability represents a huge concern.
+
+To mitigate this concern it is necessary to define common interfaces.
+[Protocol Buffers](https://developers.google.com/protocol-buffers/) seems like a good choice here due to its programming language independence and 
+ ability to directly translate values into its language dependent constructs.
+ 
+Using a shared versioned repository with protocode will address the interop problem. 
+    

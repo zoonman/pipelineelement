@@ -30,14 +30,13 @@ RUN apk update \
         mongo-cxx-driver-dev \
     && mkdir lib/SimpleAmqpClient/build  \
     && cd lib/SimpleAmqpClient/build/ \
-    && cmake .. \
+    && cmake -DBUILD_GTEST=OFF .. \
     && make install \
     && mkdir /app/lib/spdlog/build  \
     && cd /app/lib/spdlog/build \
-    && cmake .. \
+    && cmake  -DSPDLOG_BUILD_TESTS=OFF -DSPDLOG_BUILD_TESTS_HO=OFF -DSPDLOG_BUILD_EXAMPLE=OFF -DSPDLOG_BUILD_EXAMPLE=OFF .. \
     && make install \
     && cd /app \
     && cmake . \
-    && cat ./CMakeCache.txt \
     && make
 ENTRYPOINT ["/app/pipelineelement"]
