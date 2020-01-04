@@ -53,6 +53,14 @@ Access RabbitMQ UI http://localhost:15672/
 Login: `guest`, password: `guest`.
 
 #### Run built container
+To run container locally you will need to 
+specify environment variables values in `.env`.
+The repository contains sample values. You might tweak IP address. 
+It is considered to be a [good practice](https://12factor.net/config) to make `.env.local`, 
+put your values inside and never checkout this file into VCS.
+
+    
+
 ```shell script
 docker run --env-file=./.env  analogdevicesinc/cxx-pipeline-processor:latest 
 ```
