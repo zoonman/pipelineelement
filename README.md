@@ -20,7 +20,13 @@ Pipeline Element in C++.
 - [libmongoc](https://github.com/mongodb/mongo-c-driver)
 - [mongo-cxx-driver](http://mongocxx.org/mongocxx-v3/installation/)
 - [SimpleAmqpClient](https://github.com/alanxz/SimpleAmqpClient)
-    
+
+Use the following command to pull submodules after cloning
+
+```
+git submodule update --init --recursive
+```
+
 ### Local Building
 
 Building to run project locally from CLI
